@@ -6,11 +6,17 @@
 //! proof attests to a well-formed execution trace, without access to the
 //! prover, the LLM, or the original plaintext inputs and outputs.
 //!
-//! This module currently defines **only types** (no verification logic). The
-//! Risc0 receipt verification lands in Prompt 2.
+//! Phase 1 provides the [`StructuralVerifier`]: it recomputes the trace's
+//! canonical commitment and compares it to the bundle's claimed commitment
+//! (the public journal). This detects any post-hoc tampering of the trace, but
+//! — unlike the forthcoming Risc0 path — it requires the **full trace** rather
+//! than a succinct zero-knowledge proof. The Risc0 guest will prove this exact
+//! commitment equality in zero knowledge; the check itself is identical.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
+
+use core::convert::Infallible;
 
 use witnex_prover::ProofBundle;
 
@@ -21,6 +27,38 @@ pub enum VerificationOutcome {
     Verified,
     /// The proof is invalid or the trace is malformed.
     Invalid,
+}
+
+/// Verifies a bundle by recomputing the trace commitment (no ZK proof).
+///
+/// This checks the same property the Risc0 guest will prove — that
+/// `bundle.trace`'s [`commitment`](witnex_core::ExecutionTrace::commitment)
+/// equals `bundle.commitment` — but natively, requiring the full trace. It is
+/// the Phase-1 stand-in for receipt verification.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct StructuralVerifier;
+
+impl StructuralVerifier {
+    /// Recompute the trace commitment and compare it to the bundle's journal.
+    ///
+    /// Returns [`VerificationOutcome::Verified`] iff they match. Any tampering
+    /// with the trace after commitment changes the recomputed value and yields
+    /// [`VerificationOutcome::Invalid`].
+    pub fn check(bundle: &ProofBundle) -> VerificationOutcome {
+        if bundle.trace.commitment() == bundle.commitment {
+            VerificationOutcome::Verified
+        } else {
+            VerificationOutcome::Invalid
+        }
+    }
+}
+
+impl Verifier for StructuralVerifier {
+    type Error = Infallible;
+
+    async fn verify(&self, bundle: &ProofBundle) -> Result<VerificationOutcome, Self::Error> {
+        Ok(Self::check(bundle))
+    }
 }
 
 /// Verifies Witnex proof bundles.

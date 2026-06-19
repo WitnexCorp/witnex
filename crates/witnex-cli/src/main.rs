@@ -1,13 +1,14 @@
 //! Witnex demo CLI.
 //!
 //! ```text
-//! witnex demo summarize "<text>"   # run the agent, emit trace + proof JSON
-//! witnex verify <proof.json>       # verify a proof bundle (next slice)
+//! witnex demo summarize "<text>"   # run the agent, emit trace + commitment JSON
+//! witnex verify <proof.json>       # recompute the commitment -> VERIFIED / INVALID
 //! ```
 //!
 //! Phase 1 uses the in-process [`MockBackend`](witnex_core::llm::MockBackend) —
-//! no network or API key required. Proof generation / verification land in the
-//! Risc0 slice; for now the emitted bundle carries an empty placeholder proof.
+//! no network or API key required — and verifies structurally (recomputing the
+//! commitment). ZK *proof* generation/verification (Risc0) is the next slice;
+//! for now the emitted bundle carries an empty placeholder proof.
 
 #![forbid(unsafe_code)]
 
@@ -19,6 +20,7 @@ use clap::{Parser, Subcommand};
 use witnex_core::llm::{LlmBackend, LlmRequest, MockBackend};
 use witnex_core::{ExecutionTrace, Nonce, Timestamp};
 use witnex_prover::{Proof, ProofBundle};
+use witnex_verifier::{StructuralVerifier, VerificationOutcome};
 
 /// Fixed prompt template for the summarize demo. The trace commits to this
 /// template (its hash), separately from the raw input.
@@ -70,10 +72,7 @@ fn main() -> anyhow::Result<()> {
         Command::Demo {
             demo: DemoCommand::Summarize { text, out },
         } => run_summarize(&text, out.as_deref()),
-        Command::Verify { .. } => {
-            eprintln!("witnex verify: implemented in the next slice (Risc0 proof verification).");
-            std::process::exit(2);
-        }
+        Command::Verify { path } => run_verify(&path),
     }
 }
 
@@ -100,10 +99,12 @@ fn run_summarize(text: &str, out: Option<&Path>) -> anyhow::Result<()> {
         Nonce(random_nonce()?),
     );
 
-    // Risc0 proving lands next; emit a structurally complete bundle with an
-    // empty placeholder proof for now.
+    // Risc0 proving lands next; emit a structurally complete bundle with the
+    // commitment as the public journal and an empty placeholder proof for now.
+    let commitment = trace.commitment();
     let bundle = ProofBundle {
         trace,
+        commitment,
         proof: Proof { bytes: Vec::new() },
     };
     let json = serde_json::to_string_pretty(&bundle).context("serializing bundle")?;
@@ -120,6 +121,26 @@ fn run_summarize(text: &str, out: Option<&Path>) -> anyhow::Result<()> {
         None => println!("{json}"),
     }
     Ok(())
+}
+
+fn run_verify(path: &Path) -> anyhow::Result<()> {
+    let json =
+        std::fs::read_to_string(path).with_context(|| format!("reading {}", path.display()))?;
+    let bundle: ProofBundle =
+        serde_json::from_str(&json).with_context(|| format!("parsing {}", path.display()))?;
+
+    // Phase 1: structural check (recompute the commitment). The Risc0 receipt
+    // check slots in here once the guest lands.
+    match StructuralVerifier::check(&bundle) {
+        VerificationOutcome::Verified => {
+            println!("VERIFIED");
+            Ok(())
+        }
+        VerificationOutcome::Invalid => {
+            println!("INVALID");
+            std::process::exit(1);
+        }
+    }
 }
 
 /// Current Unix time in milliseconds.

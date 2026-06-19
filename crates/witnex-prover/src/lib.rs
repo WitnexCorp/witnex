@@ -15,7 +15,7 @@
 #![deny(missing_docs)]
 
 use serde::{Deserialize, Serialize};
-use witnex_core::ExecutionTrace;
+use witnex_core::{Digest, ExecutionTrace};
 
 /// An opaque zero-knowledge proof that an [`ExecutionTrace`] is well-formed.
 ///
@@ -27,7 +27,7 @@ pub struct Proof {
     pub bytes: Vec<u8>,
 }
 
-/// A self-contained bundle pairing a trace with its proof.
+/// A self-contained bundle pairing a trace with its commitment and proof.
 ///
 /// This is the artifact a Witnex agent emits and a verifier consumes — the
 /// single JSON file produced by the demo CLI.
@@ -35,7 +35,11 @@ pub struct Proof {
 pub struct ProofBundle {
     /// The execution trace being attested to.
     pub trace: ExecutionTrace,
-    /// The proof that `trace` is well-formed.
+    /// The trace's canonical commitment (the public *journal*): the value the
+    /// proof attests to, equal to [`ExecutionTrace::commitment`] of `trace` for
+    /// an untampered bundle. A verifier checks `trace` against this.
+    pub commitment: Digest,
+    /// The proof that `trace` is well-formed. Empty until the Risc0 guest lands.
     pub proof: Proof,
 }
 
