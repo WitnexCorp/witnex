@@ -12,3 +12,9 @@ authors.workspace = true
 witnex-core = { workspace = true }
 witnex-prover = { path = "../witnex-prover" }
 serde = { workspace = true }
+
+[dev-dependencies]
+# End-to-end integration test: block on the async mock backend and round-trip
+# the bundle through JSON, as the CLI does.
+pollster = "0.4"
+serde_json = { workspace = true }
