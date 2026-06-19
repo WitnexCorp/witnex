@@ -16,6 +16,20 @@ path = "src/main.rs"
 witnex-core = { workspace = true }
 witnex-prover = { path = "../witnex-prover" }
 witnex-verifier = { path = "../witnex-verifier" }
-
-# TODO(prompt-2): add `clap` for argument parsing and `anyhow` for error
-# handling once the demo commands are implemented.
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+# Lean feature set: no `color` (avoids the anstream/windows-sys dep tree) —
+# keeps the CLI's dependency footprint small and build portable.
+clap = { version = "4", default-features = false, features = [
+    "std",
+    "derive",
+    "help",
+    "usage",
+    "error-context",
+] }
+# Block on the async LLM backend without pulling in a full async runtime.
+# (Phase 1 uses the in-process mock; a real backend will switch to tokio.)
+pollster = "0.4"
+# Fill the per-trace nonce with OS randomness ("std" so its Error is a
+# std::error::Error and composes with anyhow's `.context()`).
+getrandom = { version = "0.2", features = ["std"] }
