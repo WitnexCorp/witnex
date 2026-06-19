@@ -36,6 +36,7 @@ use core::fmt;
 use serde::{Deserialize, Serialize};
 
 pub mod hash;
+pub mod llm;
 
 /// A 32-byte SHA-256 digest.
 ///
