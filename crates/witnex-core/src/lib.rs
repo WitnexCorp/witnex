@@ -37,6 +37,7 @@ use serde::{Deserialize, Serialize};
 
 pub mod hash;
 pub mod llm;
+pub mod trace;
 
 /// A 32-byte SHA-256 digest.
 ///
