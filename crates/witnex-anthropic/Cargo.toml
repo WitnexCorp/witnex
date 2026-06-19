@@ -1,0 +1,18 @@
+[package]
+name = "witnex-anthropic"
+description = "Anthropic Claude backend for the Witnex LlmBackend trait."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+witnex-core = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+# native-tls (reqwest default) avoids a cmake/aws-lc build dependency; ubuntu CI
+# ships the OpenSSL dev libs it needs.
+reqwest = { version = "0.12", features = ["json"] }

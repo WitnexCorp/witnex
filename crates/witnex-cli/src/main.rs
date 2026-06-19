@@ -17,7 +17,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use anyhow::Context as _;
 use clap::{Parser, Subcommand};
-use witnex_core::llm::{LlmBackend, LlmRequest, MockBackend};
+use witnex_anthropic::AnthropicBackend;
+use witnex_core::llm::{LlmBackend, LlmRequest, LlmResponse, MockBackend};
 use witnex_core::{ExecutionTrace, Nonce, Timestamp};
 use witnex_prover::{Proof, ProofBundle};
 use witnex_verifier::{StructuralVerifier, VerificationOutcome};
@@ -71,23 +72,45 @@ fn main() -> anyhow::Result<()> {
     match Cli::parse().command {
         Command::Demo {
             demo: DemoCommand::Summarize { text, out },
-        } => run_summarize(&text, out.as_deref()),
+        } => {
+            // The Anthropic backend does network I/O, so run on a Tokio runtime.
+            let rt = tokio::runtime::Runtime::new().context("starting async runtime")?;
+            rt.block_on(run_summarize(&text, out.as_deref()))
+        }
         Command::Verify { path } => run_verify(&path),
     }
 }
 
-fn run_summarize(text: &str, out: Option<&Path>) -> anyhow::Result<()> {
-    // Phase 1 backend: deterministic, offline mock.
-    let summary = format!(
-        "This text ({} chars) summarized in one sentence.",
-        text.len()
-    );
-    let backend = MockBackend::new(summary);
+/// Run the configured backend over the request. Uses the real Anthropic backend
+/// when `ANTHROPIC_API_KEY` is set, otherwise the offline mock.
+async fn complete(request: &LlmRequest, text: &str) -> anyhow::Result<(LlmResponse, &'static str)> {
+    match std::env::var("ANTHROPIC_API_KEY") {
+        Ok(key) if !key.is_empty() => {
+            let response = AnthropicBackend::new(key)
+                .complete(request)
+                .await
+                .context("Anthropic API call failed")?;
+            Ok((response, "anthropic"))
+        }
+        _ => {
+            let summary = format!(
+                "This text ({} chars) summarized in one sentence.",
+                text.len()
+            );
+            let response = MockBackend::new(summary)
+                .complete(request)
+                .await
+                .expect("mock backend is infallible");
+            Ok((response, "mock"))
+        }
+    }
+}
 
+async fn run_summarize(text: &str, out: Option<&Path>) -> anyhow::Result<()> {
     let filled_prompt = SUMMARIZE_TEMPLATE.replace("{input}", text);
     let request = LlmRequest::single_turn(SUMMARIZE_SYSTEM, filled_prompt, 256);
-    let response =
-        pollster::block_on(backend.complete(&request)).context("LLM backend completion failed")?;
+    let (response, backend_name) = complete(&request, text).await?;
+    eprintln!("backend:    {backend_name}");
 
     let trace = ExecutionTrace::commit(
         text,
