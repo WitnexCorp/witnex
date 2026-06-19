@@ -45,7 +45,7 @@ next slice (`witnex demo summarize` / `witnex verify`).
 - **Rust** ≥ 1.85 (edition 2024) — install via [rustup](https://rustup.rs/).
   On Windows the default `msvc` target needs the Visual C++ Build Tools; the
   rustup `x86_64-pc-windows-gnu` toolchain is a self-contained alternative.
-- **Node** ≥ 20 and **pnpm** ≥ 11.
+- **Node** ≥ 22.13 (required by pnpm 11.7+) and **pnpm** ≥ 11.
 
 ## Build
 

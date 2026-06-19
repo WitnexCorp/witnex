@@ -24,8 +24,8 @@ These come straight from the project charter and shape how we review changes:
 - **Rust** ≥ 1.85 (edition 2024) — install via [rustup](https://rustup.rs/).
   The repo pins the toolchain in `rust-toolchain.toml` (`stable` + `rustfmt` +
   `clippy`).
-- **Node** ≥ 20 and **pnpm** ≥ 11 — install pnpm via `corepack enable` or
-  `npm i -g pnpm`.
+- **Node** ≥ 22.13 (required by pnpm 11.7+) and **pnpm** ≥ 11 — install pnpm
+  via `corepack enable` or `npm i -g pnpm`.
 
 ### First build
 
