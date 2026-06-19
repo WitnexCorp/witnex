@@ -1,0 +1,19 @@
+[package]
+name = "witnex-guest"
+version = "0.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+# Detach from the parent workspace — the guest builds for the RISC-V zkVM target
+# under the Risc0 toolchain, not the host workspace.
+[workspace]
+
+[[bin]]
+name = "witnex-guest"
+path = "src/main.rs"
+
+[dependencies]
+risc0-zkvm = { version = "3.0.5", default-features = false, features = ["std"] }
+# Reuse the canonical commitment from witnex-core so the proof verifies the
+# exact same hash chain the host/CLI compute (single source of truth).
+witnex-core = { path = "../../../crates/witnex-core" }

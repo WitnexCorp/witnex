@@ -13,6 +13,9 @@ members = [
     "crates/witnex-verifier",
     "crates/witnex-cli",
 ]
+# The Risc0 zkVM lives in its own workspace: it needs the `rzup` guest toolchain
+# (Linux/macOS/WSL) and must not be built by the default `cargo --workspace`.
+exclude = ["zkvm"]
 
 [workspace.package]
 version = "0.0.0"

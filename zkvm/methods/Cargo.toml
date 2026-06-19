@@ -1,0 +1,13 @@
+[package]
+name = "witnex-methods"
+description = "Build glue that compiles the Witnex Risc0 guest and embeds its ELF + image id."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[build-dependencies]
+risc0-build = { workspace = true }
+
+# Tells risc0-build which guest crate(s) to compile.
+[package.metadata.risc0]
+methods = ["guest"]

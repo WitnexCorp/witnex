@@ -1,0 +1,29 @@
+# Witnex zkVM workspace — Risc0 guest + host.
+#
+# Separate from the root workspace because building the guest requires the
+# Risc0 `rzup` toolchain (RISC-V), available on Linux/macOS/WSL only. Build with:
+#
+#   cd zkvm && RISC0_DEV_MODE=1 cargo test   # fast dev-mode execution
+#   cd zkvm && cargo test                    # real STARK proof (slow, heavy)
+
+[workspace]
+resolver = "2"
+members = ["host", "methods"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/witnex/witnex"
+
+[workspace.dependencies]
+risc0-zkvm = "3.0.5"
+risc0-build = "3.0.5"
+witnex-core = { path = "../crates/witnex-core" }
+witnex-prover = { path = "../crates/witnex-prover" }
+serde = { version = "1", features = ["derive"] }
+anyhow = "1"
+
+# Release profile recommended by Risc0 for host proving performance.
+[profile.release]
+opt-level = 3

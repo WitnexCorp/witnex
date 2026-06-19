@@ -1,0 +1,49 @@
+name: zkVM
+
+# The Risc0 guest needs the rzup toolchain, so this runs separately from the
+# main CI and only when the zkVM or its shared crate changes.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "zkvm/**"
+      - "crates/witnex-core/**"
+      - ".github/workflows/zkvm.yml"
+  pull_request:
+    paths:
+      - "zkvm/**"
+      - "crates/witnex-core/**"
+      - ".github/workflows/zkvm.yml"
+
+concurrency:
+  group: zkvm-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  zkvm:
+    name: Risc0 guest (dev mode)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: zkvm
+
+      - name: Install RISC Zero toolchain
+        run: |
+          curl -L https://risczero.com/install | bash
+          echo "$HOME/.risc0/bin" >> "$GITHUB_PATH"
+
+      - name: rzup install
+        run: rzup install
+
+      - name: Build & test (dev mode)
+        working-directory: zkvm
+        env:
+          RISC0_DEV_MODE: "1"
+        run: cargo test --workspace
