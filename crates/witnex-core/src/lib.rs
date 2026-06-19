@@ -35,6 +35,8 @@ use core::fmt;
 
 use serde::{Deserialize, Serialize};
 
+pub mod hash;
+
 /// A 32-byte SHA-256 digest.
 ///
 /// All commitments in a [`ExecutionTrace`] are SHA-256 digests of the
