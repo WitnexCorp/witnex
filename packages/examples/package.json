@@ -1,0 +1,16 @@
+{
+  "name": "@witnex/examples",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Example apps using the Witnex SDK.",
+  "license": "MIT OR Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"(no examples yet)\"",
+    "lint": "echo \"(no examples yet)\"",
+    "test": "echo \"(no examples yet)\""
+  },
+  "dependencies": {
+    "@witnex/sdk": "workspace:*"
+  }
+}

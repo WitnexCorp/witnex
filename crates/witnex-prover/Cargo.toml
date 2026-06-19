@@ -1,0 +1,17 @@
+[package]
+name = "witnex-prover"
+description = "Risc0 zkVM host + guest glue for proving Witnex execution traces well-formed."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+witnex-core = { workspace = true }
+serde = { workspace = true }
+
+# TODO(prompt-2): add `risc0-zkvm` (host) and a `methods`/guest build for the
+# hash-chain verification program. Kept out for now so the workspace builds
+# without the heavy zkVM toolchain.

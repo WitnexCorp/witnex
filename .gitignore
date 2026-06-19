@@ -1,0 +1,24 @@
+# Rust
+/target
+**/*.rs.bk
+Cargo.lock.orig
+
+# Node / pnpm
+node_modules/
+dist/
+*.tsbuildinfo
+.pnpm-store/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Internal planning notes — not for the public repo
+reference/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,21 @@
+[package]
+name = "witnex-cli"
+description = "Witnex demo CLI."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "witnex"
+path = "src/main.rs"
+
+[dependencies]
+witnex-core = { workspace = true }
+witnex-prover = { path = "../witnex-prover" }
+witnex-verifier = { path = "../witnex-verifier" }
+
+# TODO(prompt-2): add `clap` for argument parsing and `anyhow` for error
+# handling once the demo commands are implemented.

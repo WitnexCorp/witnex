@@ -1,0 +1,14 @@
+[package]
+name = "witnex-verifier"
+description = "Standalone verifier for Witnex proof bundles."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+witnex-core = { workspace = true }
+witnex-prover = { path = "../witnex-prover" }
+serde = { workspace = true }

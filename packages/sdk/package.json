@@ -1,0 +1,26 @@
+{
+  "name": "@witnex/sdk",
+  "version": "0.0.0",
+  "description": "TypeScript SDK for the Witnex verifiable AI agent framework.",
+  "license": "MIT OR Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo \"(no tests yet)\""
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
