@@ -39,9 +39,15 @@ witnex/
 
 ## Status
 
-**Phase 1, Prompt 1 complete** — workspace scaffold, core types/traits, and the
-architecture document. No proving or LLM logic is implemented yet; that is the
-next slice (`witnex demo summarize` / `witnex verify`).
+**Phase 1 working slice implemented.** `witnex demo summarize` commits an
+execution trace and emits a `ProofBundle`; `witnex verify` checks it
+(structurally). LLM backends are pluggable — offline `MockBackend` by default,
+real Claude when `ANTHROPIC_API_KEY` is set. The Risc0 zkVM guest recomputes the
+commitment and proves it (dev-mode validated); see [`zkvm/`](zkvm/) and
+[`docs/architecture.md`](docs/architecture.md).
+
+Remaining: a full real-STARK end-to-end run and wiring receipt verification into
+the main `witnex verify`.
 
 ## Prerequisites
 
