@@ -1,0 +1,12 @@
+[package]
+name = "witnex-zkvm-host"
+description = "Risc0 host: prove and verify Witnex execution-trace well-formedness."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+risc0-zkvm = { workspace = true }
+witnex-methods = { path = "../methods" }
+witnex-core = { workspace = true }
+anyhow = { workspace = true }

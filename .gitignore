@@ -1,5 +1,8 @@
 # Rust
 /target
+# zkVM (separate workspace) build outputs, incl. the detached guest's target
+zkvm/target/
+zkvm/methods/guest/target/
 **/*.rs.bk
 Cargo.lock.orig
 
