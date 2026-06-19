@@ -289,7 +289,9 @@ dependencies = [
 name = "witnex-verifier"
 version = "0.0.0"
 dependencies = [
+ "pollster",
  "serde",
+ "serde_json",
  "witnex-core",
  "witnex-prover",
 ]
