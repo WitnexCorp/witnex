@@ -26,6 +26,10 @@ importers:
       '@witnex/sdk':
         specifier: workspace:*
         version: link:../sdk
+    devDependencies:
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
 
   packages/sdk:
     devDependencies:
