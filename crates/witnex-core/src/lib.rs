@@ -21,9 +21,10 @@
 //! commits to *what the model was asked and what it returned*, not to *whether
 //! the returned answer is the "right" one*.
 //!
-//! This crate defines **only types and traits** — no proving, hashing, or I/O
-//! logic lives here yet. See [`witnex-prover`] and [`witnex-verifier`] for the
-//! Risc0 proof machinery.
+//! Beyond the core types and traits, this crate provides the canonical hashing
+//! and trace-commitment logic (see [`hash`] and [`trace`]). It does **not** do
+//! proving or I/O — see [`witnex-prover`] and [`witnex-verifier`] for the Risc0
+//! proof machinery.
 //!
 //! [`witnex-prover`]: https://github.com/witnex/witnex
 //! [`witnex-verifier`]: https://github.com/witnex/witnex

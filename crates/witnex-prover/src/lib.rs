@@ -6,8 +6,9 @@
 //! **well-formed** — that its commitments form a consistent hash chain — *not*
 //! that the LLM inference was correct.
 //!
-//! This module currently defines **only types** (no proving logic). The Risc0
-//! host/guest integration lands in Prompt 2.
+//! This module currently defines **only types** (no proving logic). Wiring the
+//! Risc0 host/guest so a real receipt fills `Proof::bytes` is the remaining
+//! zkVM work; see the `zkvm/` workspace.
 //!
 //! [Risc0]: https://dev.risczero.com/
 
