@@ -49,7 +49,7 @@ enum Command {
         #[command(subcommand)]
         demo: DemoCommand,
     },
-    /// Verify a proof bundle (implemented in the Risc0 slice).
+    /// Verify a proof bundle (Phase 1: structural commitment recompute).
     Verify {
         /// Path to a proof bundle JSON file.
         path: PathBuf,

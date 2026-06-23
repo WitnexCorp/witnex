@@ -6,11 +6,15 @@
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "scripts": {
-    "build": "echo \"(no examples yet)\"",
-    "lint": "echo \"(no examples yet)\"",
-    "test": "echo \"(no examples yet)\""
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.build.json && node dist/round-trip.js"
   },
   "dependencies": {
     "@witnex/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
   }
 }
