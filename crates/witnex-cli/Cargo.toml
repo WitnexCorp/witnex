@@ -32,4 +32,4 @@ clap = { version = "4", default-features = false, features = [
 ] }
 # Fill the per-trace nonce with OS randomness ("std" so its Error is a
 # std::error::Error and composes with anyhow's `.context()`).
-getrandom = { version = "0.2", features = ["std"] }
+getrandom = { version = "0.4", features = ["std"] }
