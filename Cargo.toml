@@ -35,7 +35,7 @@ witnex-core = { path = "crates/witnex-core" }
 # resolves to the same version.
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-sha2 = "0.10"
+sha2 = "0.11"
 thiserror = "2"
 anyhow = "1"
 
