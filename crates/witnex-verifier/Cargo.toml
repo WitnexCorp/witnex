@@ -16,5 +16,5 @@ serde = { workspace = true }
 [dev-dependencies]
 # End-to-end integration test: block on the async mock backend and round-trip
 # the bundle through JSON, as the CLI does.
-pollster = "0.4"
+pollster = "1.0"
 serde_json = { workspace = true }
