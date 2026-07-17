@@ -15,4 +15,4 @@ sha2 = { workspace = true }
 [dev-dependencies]
 # Tiny no-dependency executor to block on the async backend trait in tests
 # (the crate forbids unsafe, so we can't hand-roll one).
-pollster = "0.4"
+pollster = "1.0"
